@@ -6,14 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.chugunov.foodapp.R
 import com.chugunov.foodapp.databinding.FragmentMenuBinding
+import com.chugunov.foodapp.presentation.adapters.BannersAdapter
+import kotlinx.coroutines.launch
 
 class MenuFragment: Fragment() {
 
     private var _binding: FragmentMenuBinding? = null
     private val binding: FragmentMenuBinding
         get() = _binding ?: throw RuntimeException("FragmentMenuBinding == null")
+
+    private val viewModel by lazy {
+        ViewModelProvider(this)[MainViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,6 +35,11 @@ class MenuFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createCitiesSpinner()
+        val adapter = BannersAdapter()
+        binding.rvBanners.adapter = adapter
+        viewModel.bannersList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
     }
 
     override fun onDestroy() {
