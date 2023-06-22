@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.chugunov.foodapp.presentation.MainFragment"
+        android:name="com.chugunov.foodapp.presentation.MenuFragment"
         android:label="MainFragment" />
 </navigation>
