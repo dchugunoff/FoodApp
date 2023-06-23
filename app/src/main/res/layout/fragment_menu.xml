@@ -38,5 +38,15 @@
             android:orientation="horizontal"
             tools:listitem="@layout/banner_card"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_items"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_banners"
+            tools:listitem="@layout/item_card"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

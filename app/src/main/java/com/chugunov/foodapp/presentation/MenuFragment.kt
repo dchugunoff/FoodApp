@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.chugunov.foodapp.R
 import com.chugunov.foodapp.databinding.FragmentMenuBinding
 import com.chugunov.foodapp.presentation.adapters.BannersAdapter
+import com.chugunov.foodapp.presentation.adapters.ItemsAdapter
 import kotlinx.coroutines.launch
 
 class MenuFragment: Fragment() {
@@ -36,9 +37,14 @@ class MenuFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         createCitiesSpinner()
         val adapter = BannersAdapter()
+        val itemsAdapter = ItemsAdapter()
         binding.rvBanners.adapter = adapter
+        binding.rvItems.adapter = itemsAdapter
         viewModel.bannersList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+        }
+        viewModel.itemList.observe(viewLifecycleOwner) {
+            itemsAdapter.submitList(it)
         }
     }
 
