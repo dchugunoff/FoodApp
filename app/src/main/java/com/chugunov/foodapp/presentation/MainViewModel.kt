@@ -1,7 +1,6 @@
 package com.chugunov.foodapp.presentation
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +14,7 @@ import com.chugunov.foodapp.domain.GetBannersUseCase
 import com.chugunov.foodapp.domain.GetItemListUseCase
 import com.chugunov.foodapp.domain.models.BannerModel
 import com.chugunov.foodapp.domain.models.FoodModel
+import com.chugunov.foodapp.presentation.adapters.ItemsAdapter
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val application: Application) : ViewModel() {
@@ -34,6 +34,8 @@ class MainViewModel(private val application: Application) : ViewModel() {
     private val getBannersUseCase = GetBannersUseCase(repository)
     private val getItemListUseCase = GetItemListUseCase(itemsRepository)
 
+    private var itemsAdapter = ItemsAdapter()
+
     init {
         getBanners()
         viewModelScope.launch {
@@ -49,13 +51,15 @@ class MainViewModel(private val application: Application) : ViewModel() {
     private fun getFoodList() {
         getItemListUseCase.getItems().observeForever { listFoodModel ->
             _itemList.value = listFoodModel
-            Log.d("ApiServiceIL", "$_itemList")
         }
     }
 
     private suspend fun insertItems() {
         val daoModels = ApiFactory.apiService.getProductsList()
         itemsRepository.insertItem(daoModels)
-        Log.d("ApiServiceDM", "$daoModels")
+    }
+
+    fun getItemsAdapter(): ItemsAdapter {
+        return itemsAdapter
     }
 }

@@ -1,15 +1,19 @@
 package com.chugunov.foodapp.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.chugunov.foodapp.MainActivity
 import com.chugunov.foodapp.databinding.FragmentMenuBinding
 import com.chugunov.foodapp.presentation.adapters.BannersAdapter
 import com.chugunov.foodapp.presentation.adapters.ItemsAdapter
+import com.chugunov.foodapp.presentation.categoryfragments.CategoryPagerAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MenuFragment : Fragment() {
 
@@ -18,10 +22,10 @@ class MenuFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentMenuBinding == null")
 
     private val viewModel: MainViewModel by lazy {
-        val application = requireActivity().application
-        val viewModelFactory = MainViewModelFactory(application)
-        ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        (requireActivity() as MainActivity).sharedViewModel
     }
+
+    private val tabTitles = arrayListOf("Все", "Бургеры", "Пицца")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,22 +33,33 @@ class MenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
+        setUpTableLayoutWithViewPager()
         return binding.root
+    }
+
+    private fun setUpTableLayoutWithViewPager() {
+        binding.viewPager.adapter = CategoryPagerAdapter(this)
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = tabTitles[position]
+        }.attach()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createCitiesSpinner()
         val adapter = BannersAdapter()
-        val itemsAdapter = ItemsAdapter()
+//        val itemAdapter = (requireActivity() as MainActivity).adapter
+//        binding.rvItems.adapter = itemAdapter
+//        viewModel.itemList.observe(viewLifecycleOwner) {
+//            itemAdapter.submitList(it)
+//        }
         binding.rvBanners.adapter = adapter
-        binding.rvItems.adapter = itemsAdapter
         viewModel.bannersList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
-        viewModel.itemList.observe(viewLifecycleOwner) {
-            itemsAdapter.submitList(it)
-        }
+//        Log.d("MenuFragment", "$viewModel")
+//        Log.d("MenuFragment", "$itemAdapter")
+//        Log.d("MenuFragment", "${viewModel.itemList.value}")
     }
 
     override fun onDestroy() {
