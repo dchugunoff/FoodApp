@@ -6,12 +6,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.chugunov.foodapp.data.network.FoodItemDto
 import com.chugunov.foodapp.databinding.ItemCardBinding
+import com.chugunov.foodapp.domain.models.FoodModel
 
-class ItemsAdapter : ListAdapter<FoodItemDto, ItemsAdapter.ItemsViewHolder>(DiffCallback){
+class ItemsAdapter : ListAdapter<FoodModel, ItemsAdapter.ItemsViewHolder>(DiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsAdapter.ItemsViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ItemsAdapter.ItemsViewHolder {
         val binding = ItemCardBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -29,22 +32,22 @@ class ItemsAdapter : ListAdapter<FoodItemDto, ItemsAdapter.ItemsViewHolder>(Diff
     inner class ItemsViewHolder(private val binding: ItemCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-            fun bind(foodItemDto: FoodItemDto) {
-                binding.itemImage.load(foodItemDto.img)
-                binding.itemPriceButton.text = foodItemDto.price
-                binding.itemTextName.text = foodItemDto.name
-                binding.itemTextDescription.text = foodItemDto.description
-            }
+        fun bind(foodModel: FoodModel) {
+            binding.itemImage.load(foodModel.img)
+            binding.itemPriceButton.text = foodModel.price
+            binding.itemTextName.text = foodModel.name
+            binding.itemTextDescription.text = foodModel.description
+        }
     }
 
     companion object {
-        private val DiffCallback = object : DiffUtil.ItemCallback<FoodItemDto>() {
+        private val DiffCallback = object : DiffUtil.ItemCallback<FoodModel>() {
 
-            override fun areItemsTheSame(oldItem: FoodItemDto, newItem: FoodItemDto): Boolean {
+            override fun areItemsTheSame(oldItem: FoodModel, newItem: FoodModel): Boolean {
                 return oldItem.name == newItem.name
             }
 
-            override fun areContentsTheSame(oldItem: FoodItemDto, newItem: FoodItemDto): Boolean {
+            override fun areContentsTheSame(oldItem: FoodModel, newItem: FoodModel): Boolean {
                 return oldItem == newItem
             }
 

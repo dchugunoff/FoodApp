@@ -1,6 +1,6 @@
 package com.chugunov.foodapp.data.network
 
-data class FoodItemDto(
+data class FoodModelDto(
     val category: String,
     val description: String,
     val img: String,

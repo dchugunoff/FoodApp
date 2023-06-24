@@ -7,21 +7,20 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import com.chugunov.foodapp.R
 import com.chugunov.foodapp.databinding.FragmentMenuBinding
 import com.chugunov.foodapp.presentation.adapters.BannersAdapter
 import com.chugunov.foodapp.presentation.adapters.ItemsAdapter
-import kotlinx.coroutines.launch
 
-class MenuFragment: Fragment() {
+class MenuFragment : Fragment() {
 
     private var _binding: FragmentMenuBinding? = null
     private val binding: FragmentMenuBinding
         get() = _binding ?: throw RuntimeException("FragmentMenuBinding == null")
 
-    private val viewModel by lazy {
-        ViewModelProvider(this)[MainViewModel::class.java]
+    private val viewModel: MainViewModel by lazy {
+        val application = requireActivity().application
+        val viewModelFactory = MainViewModelFactory(application)
+        ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
     }
 
     override fun onCreateView(
