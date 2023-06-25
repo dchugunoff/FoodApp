@@ -41,9 +41,12 @@
         android:layout_weight="1"
         app:defaultNavHost="true"
         app:navGraph="@navigation/main_navigation">
-
-
-
     </androidx.fragment.app.FragmentContainerView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/botom_nav_bar"
+        app:menu="@menu/bottom_nav_menu"/>
 
 </LinearLayout>

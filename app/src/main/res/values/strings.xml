@@ -4,4 +4,7 @@
     <string name="pizza">Пицца</string>
     <string name="burgers">Бургеры</string>
     <string name="price_btn_string">от %s р</string>
+    <string name="menu">Меню</string>
+    <string name="profile">Профиль</string>
+    <string name="cart">Корзина</string>
 </resources>
