@@ -1,15 +1,18 @@
 package com.chugunov.foodapp.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.chugunov.foodapp.databinding.FragmentMenuBinding
 import com.chugunov.foodapp.presentation.adapters.BannersAdapter
 import com.chugunov.foodapp.presentation.adapters.ItemsAdapter
+import com.google.android.material.chip.Chip
 
 class MenuFragment : Fragment() {
 
@@ -23,6 +26,8 @@ class MenuFragment : Fragment() {
         ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
     }
 
+    private lateinit var itemsAdapter: ItemsAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,9 +39,10 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         createCitiesSpinner()
         val adapter = BannersAdapter()
-        val itemsAdapter = ItemsAdapter()
+        itemsAdapter = ItemsAdapter()
         binding.rvBanners.adapter = adapter
         binding.rvItems.adapter = itemsAdapter
         viewModel.bannersList.observe(viewLifecycleOwner) {
@@ -44,6 +50,19 @@ class MenuFragment : Fragment() {
         }
         viewModel.itemList.observe(viewLifecycleOwner) {
             itemsAdapter.submitList(it)
+        }
+        val chipGroup = binding.chipGroup
+        chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            val selectedCategory = group.findViewById<Chip>(checkedId)?.text
+        }
+    }
+
+
+
+    fun filterItemsByCategory(selectedCategory: String) {
+        val fullItemList = viewModel.itemList.value
+        val filteredList = fullItemList?.filter { foodModel ->
+            foodModel.category == selectedCategory
         }
     }
 
