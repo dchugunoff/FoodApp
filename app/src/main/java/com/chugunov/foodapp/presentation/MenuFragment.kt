@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.chugunov.foodapp.MainActivity
 import com.chugunov.foodapp.databinding.FragmentMenuBinding
 import com.chugunov.foodapp.presentation.adapters.BannersAdapter
 import com.chugunov.foodapp.presentation.adapters.ItemsAdapter
@@ -19,11 +20,8 @@ class MenuFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentMenuBinding == null")
 
     private val viewModel: MainViewModel by lazy {
-        val application = requireActivity().application
-        val viewModelFactory = MainViewModelFactory(application)
-        ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        (requireActivity() as MainActivity).sharedViewModel
     }
-
     private lateinit var itemsAdapter: ItemsAdapter
 
     override fun onCreateView(
@@ -32,7 +30,15 @@ class MenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
+        setUpTableLayoutWithViewPager()
         return binding.root
+    }
+
+    private fun setUpTableLayoutWithViewPager() {
+        binding.viewPager.adapter = CategoryPagerAdapter(this)
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = tabTitles[position]
+        }.attach()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

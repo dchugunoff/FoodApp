@@ -18,6 +18,7 @@ import com.chugunov.foodapp.domain.GetItemListUseCase
 import com.chugunov.foodapp.domain.models.BannerModel
 import com.chugunov.foodapp.domain.models.FoodModel
 import kotlinx.coroutines.Dispatchers
+import com.chugunov.foodapp.presentation.adapters.ItemsAdapter
 import kotlinx.coroutines.launch
 import okio.IOException
 
@@ -37,6 +38,8 @@ class MainViewModel(private val application: Application) : ViewModel() {
 
     private val getBannersUseCase = GetBannersUseCase(repository)
     private val getItemListUseCase = GetItemListUseCase(itemsRepository)
+
+    private var itemsAdapter = ItemsAdapter()
 
     init {
         getBanners()
