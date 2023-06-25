@@ -17,6 +17,7 @@ import com.chugunov.foodapp.domain.GetBannersUseCase
 import com.chugunov.foodapp.domain.GetItemListUseCase
 import com.chugunov.foodapp.domain.models.BannerModel
 import com.chugunov.foodapp.domain.models.FoodModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okio.IOException
 
@@ -46,7 +47,10 @@ class MainViewModel(private val application: Application) : ViewModel() {
     }
 
     private fun getBanners() {
-        _bannersList.value = getBannersUseCase.execute()
+        viewModelScope.launch(Dispatchers.IO) {
+            val banners = getBannersUseCase.execute()
+            _bannersList.postValue(banners)
+        }
     }
 
     private fun getFoodList() {

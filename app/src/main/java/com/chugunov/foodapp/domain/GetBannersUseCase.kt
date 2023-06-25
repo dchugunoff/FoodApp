@@ -6,7 +6,7 @@ class GetBannersUseCase(
     private val repository: BannersRepository
 ) {
 
-    fun execute(): List<BannerModel> {
+    suspend fun execute(): List<BannerModel> {
         return repository.getBanners()
     }
 }

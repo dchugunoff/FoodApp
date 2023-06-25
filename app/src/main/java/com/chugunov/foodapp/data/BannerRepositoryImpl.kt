@@ -6,7 +6,7 @@ import com.chugunov.foodapp.domain.BannersRepository
 
 class BannerRepositoryImpl: BannersRepository {
 
-    override fun getBanners(): List<BannerModel> {
+    override suspend fun getBanners(): List<BannerModel> {
         return listOf(
             BannerModel(drawable = R.drawable.banner_1),
             BannerModel(drawable = R.drawable.banner_4)

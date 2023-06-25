@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.chugunov.foodapp.databinding.BannerCardBinding
 import com.chugunov.foodapp.domain.models.BannerModel
 
@@ -29,7 +30,7 @@ class BannersAdapter : ListAdapter<BannerModel, BannersAdapter.BannersViewHolder
     inner class BannersViewHolder(private val binding: BannerCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
             fun bind(banner: BannerModel) {
-                binding.imageCardBanner.setImageResource(banner.drawable)
+                binding.imageCardBanner.load(banner.drawable)
             }
     }
 
