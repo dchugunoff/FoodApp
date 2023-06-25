@@ -39,30 +39,41 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         createCitiesSpinner()
-        val adapter = BannersAdapter()
+        viewModelObservers()
         itemsAdapter = ItemsAdapter()
-        binding.rvBanners.adapter = adapter
         binding.rvItems.adapter = itemsAdapter
-        viewModel.bannersList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
-        viewModel.itemList.observe(viewLifecycleOwner) {
-            itemsAdapter.submitList(it)
-        }
         val chipGroup = binding.chipGroup
         chipGroup.setOnCheckedChangeListener { group, checkedId ->
-            val selectedCategory = group.findViewById<Chip>(checkedId)?.text
+            val selectedCategory = group.findViewById<Chip>(checkedId)?.text.toString()
+            filterItemsByCategory(selectedCategory)
+            filterItemsByCategory(selectedCategory)
+            Log.d("MenuFragment", selectedCategory)
         }
     }
 
 
 
-    fun filterItemsByCategory(selectedCategory: String) {
+    private fun viewModelObservers() {
+        viewModel.bannersList.observe(viewLifecycleOwner) {
+            val adapter = BannersAdapter()
+            binding.rvBanners.adapter = adapter
+            adapter.submitList(it)
+        }
+        viewModel.itemList.observe(viewLifecycleOwner) {
+            itemsAdapter.submitList(it)
+        }
+    }
+
+    private fun filterItemsByCategory(selectedCategory: String) {
         val fullItemList = viewModel.itemList.value
-        val filteredList = fullItemList?.filter { foodModel ->
-            foodModel.category == selectedCategory
+        if (selectedCategory == "null") {
+            itemsAdapter.submitList(fullItemList)
+        } else {
+            val filteredList = fullItemList?.filter { foodModel ->
+                foodModel.category == selectedCategory
+            }
+            itemsAdapter.submitList(filteredList)
         }
     }
 
