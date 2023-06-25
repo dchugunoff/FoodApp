@@ -1,15 +1,18 @@
 package com.chugunov.foodapp.presentation.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.chugunov.foodapp.R
 import com.chugunov.foodapp.databinding.ItemCardBinding
 import com.chugunov.foodapp.domain.models.FoodModel
 
-class ItemsAdapter : ListAdapter<FoodModel, ItemsAdapter.ItemsViewHolder>(DiffCallback) {
+class ItemsAdapter(private val context: Context) :
+    ListAdapter<FoodModel, ItemsAdapter.ItemsViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -34,7 +37,8 @@ class ItemsAdapter : ListAdapter<FoodModel, ItemsAdapter.ItemsViewHolder>(DiffCa
 
         fun bind(foodModel: FoodModel) {
             binding.itemImage.load(foodModel.img)
-            binding.itemPriceButton.text = foodModel.price
+            binding.itemPriceButton.text =
+                String.format(context.getString(R.string.price_btn_string), foodModel.price)
             binding.itemTextName.text = foodModel.name
             binding.itemTextDescription.text = foodModel.description
         }

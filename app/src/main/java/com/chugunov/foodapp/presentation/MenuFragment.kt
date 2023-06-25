@@ -5,8 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.chugunov.foodapp.databinding.FragmentMenuBinding
@@ -39,9 +37,8 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        createCitiesSpinner()
         viewModelObservers()
-        itemsAdapter = ItemsAdapter()
+        itemsAdapter = ItemsAdapter(requireContext())
         binding.rvItems.adapter = itemsAdapter
         val chipGroup = binding.chipGroup
         chipGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -51,7 +48,6 @@ class MenuFragment : Fragment() {
             Log.d("MenuFragment", selectedCategory)
         }
     }
-
 
 
     private fun viewModelObservers() {
@@ -82,10 +78,4 @@ class MenuFragment : Fragment() {
         _binding = null
     }
 
-    private fun createCitiesSpinner() {
-        val cities = listOf("Москва", "Казань")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, cities)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.citySpinner.adapter = adapter
-    }
 }

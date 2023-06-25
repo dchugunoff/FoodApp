@@ -3,4 +3,5 @@
     <string name="all">Все</string>
     <string name="pizza">Пицца</string>
     <string name="burgers">Бургеры</string>
+    <string name="price_btn_string">от %s р</string>
 </resources>
