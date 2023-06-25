@@ -5,15 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.chugunov.foodapp.MainActivity
 import com.chugunov.foodapp.databinding.FragmentMenuBinding
 import com.chugunov.foodapp.presentation.adapters.BannersAdapter
 import com.chugunov.foodapp.presentation.adapters.ItemsAdapter
-import com.chugunov.foodapp.presentation.categoryfragments.CategoryPagerAdapter
-import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.chip.Chip
 
 class MenuFragment : Fragment() {
 
@@ -24,8 +22,7 @@ class MenuFragment : Fragment() {
     private val viewModel: MainViewModel by lazy {
         (requireActivity() as MainActivity).sharedViewModel
     }
-
-    private val tabTitles = arrayListOf("Все", "Бургеры", "Пицца")
+    private lateinit var itemsAdapter: ItemsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,20 +43,40 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        createCitiesSpinner()
-        val adapter = BannersAdapter()
-//        val itemAdapter = (requireActivity() as MainActivity).adapter
-//        binding.rvItems.adapter = itemAdapter
-//        viewModel.itemList.observe(viewLifecycleOwner) {
-//            itemAdapter.submitList(it)
-//        }
-        binding.rvBanners.adapter = adapter
+        viewModelObservers()
+        itemsAdapter = ItemsAdapter(requireContext())
+        binding.rvItems.adapter = itemsAdapter
+        val chipGroup = binding.chipGroup
+        chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            val selectedCategory = group.findViewById<Chip>(checkedId)?.text.toString()
+            filterItemsByCategory(selectedCategory)
+            filterItemsByCategory(selectedCategory)
+            Log.d("MenuFragment", selectedCategory)
+        }
+    }
+
+
+    private fun viewModelObservers() {
         viewModel.bannersList.observe(viewLifecycleOwner) {
+            val adapter = BannersAdapter()
+            binding.rvBanners.adapter = adapter
             adapter.submitList(it)
         }
-//        Log.d("MenuFragment", "$viewModel")
-//        Log.d("MenuFragment", "$itemAdapter")
-//        Log.d("MenuFragment", "${viewModel.itemList.value}")
+        viewModel.itemList.observe(viewLifecycleOwner) {
+            itemsAdapter.submitList(it)
+        }
+    }
+
+    private fun filterItemsByCategory(selectedCategory: String) {
+        val fullItemList = viewModel.itemList.value
+        if (selectedCategory == "null") {
+            itemsAdapter.submitList(fullItemList)
+        } else {
+            val filteredList = fullItemList?.filter { foodModel ->
+                foodModel.category == selectedCategory
+            }
+            itemsAdapter.submitList(filteredList)
+        }
     }
 
     override fun onDestroy() {
@@ -67,10 +84,4 @@ class MenuFragment : Fragment() {
         _binding = null
     }
 
-    private fun createCitiesSpinner() {
-        val cities = listOf("Москва", "Казань")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, cities)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.citySpinner.adapter = adapter
-    }
 }
